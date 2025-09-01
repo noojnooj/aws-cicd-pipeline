@@ -21,8 +21,9 @@ jobs:
 
           mkdir -p "${REL_DIR}"
 
+          # ✅ 깔끔한 아카이브: .git 제외, 파일 변경 경고 없음
           TAR="app-${SHA}.tar.gz"
-          tar -czf "${TAR}" .
+          git archive --format=tar.gz --output="${TAR}" "${SHA}"
 
           mkdir -p "${REL_DIR}/${REPO_NAME}-${SHA}"
           tar -xzf "${TAR}" -C "${REL_DIR}/${REPO_NAME}-${SHA}"
