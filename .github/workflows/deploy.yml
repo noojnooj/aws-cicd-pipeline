@@ -22,7 +22,8 @@ jobs:
             APP_DIR="/home/ec2-user/apps"
             REL_DIR="${APP_DIR}/releases"
             SHA="${{ github.sha }}"
-            REPO="${{ github.repository }}"   # owner/repo
+            REPO="${{ github.repository }}"      # owner/repo
+            REPO_NAME="${REPO##*/}"              # repo
             TARBALL_URL="https://codeload.github.com/${REPO}/tar.gz/${SHA}"
 
             mkdir -p "${REL_DIR}"
@@ -31,8 +32,11 @@ jobs:
             echo "Downloading tarball..."
             curl -L "${TARBALL_URL}" -o "app-${SHA}.tar.gz"
 
+            echo "Extracting..."
             tar -xzf "app-${SHA}.tar.gz"
-            NEW_DIR="$(tar -tzf "app-${SHA}.tar.gz" | head -1 | cut -f1 -d"/")"
+
+            # 🔧 GitHub tarball 최상위 폴더명은 <repo>-<sha>
+            NEW_DIR="${REPO_NAME}-${SHA}"
 
             cd "${REL_DIR}/${NEW_DIR}"
 
